@@ -3,11 +3,22 @@ const hbs = require("hbs");
 
 let app = express();
 
+// Verwendung von Partials (=Unter-Templates) enablen
+hbs.registerPartials(__dirname + "/views/partials");
+
 // Handlebars-Plugin ("hbs") als View-Engine setzen
 app.set("view engine", "hbs");
 
 // statisches Directoty festlegen
 app.use(express.static(__dirname + "/public"));
+
+// Helper-Funktion, um die Daten des aktuellen Jahres nur einmal bereitstellen zu müssen
+hbs.registerHelper("getCurrentYear", () => {
+  return new Date().getFullYear();
+});
+hbs.registerHelper("screamIt", (text) => {
+  return text.toUpperCase();
+});
 
 // Get-Request zu einer Resource
 // app.get("/", (req, res) => {
@@ -21,7 +32,6 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
   res.render("home.hbs", {
     pageTitle: "Home Page",
-    currentYear: new Date().getFullYear(),
     welcomeMessage: "Welcome to my Website!"
   });
 });
@@ -30,8 +40,7 @@ app.get("/", (req, res) => {
 // Seite mit Handlebars-Plugin rendern
 app.get("/about", (req, res) => {
   res.render("about.hbs", {
-    pageTitle: "About Page",
-    currentYear: new Date().getFullYear()
+    pageTitle: "About Page"
   });
 });
 
