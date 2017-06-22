@@ -1,5 +1,6 @@
 const express = require("express");
 const hbs = require("hbs");
+const fs = require("fs");
 
 let app = express();
 
@@ -8,6 +9,22 @@ hbs.registerPartials(__dirname + "/views/partials");
 
 // Handlebars-Plugin ("hbs") als View-Engine setzen
 app.set("view engine", "hbs");
+
+// eigene Middleware nutzen
+app.use((req, res, next) => {
+  const now = new Date().toString();
+  const log = `${now}: ${req.method} ${req.url}`;
+  console.log(log);
+  fs.appendFile("server.log", log + "\n", (error) => {
+    if(error)
+      console.log("Unable to append to server.log");
+  });
+  next();  // beendet die Middleware und geht zur nächsten -> notwendig, weil sonst nichts ausgeliefert wird!!!
+});
+
+// app.use((req, res, next) => {
+//   res.render("maintenance.hbs");
+// });
 
 // statisches Directoty festlegen
 app.use(express.static(__dirname + "/public"));
