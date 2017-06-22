@@ -2,6 +2,9 @@ const express = require("express");
 const hbs = require("hbs");
 const fs = require("fs");
 
+// Heroku-Port oder 3000 verwenden
+const port = process.env.PORT || 3000;
+
 let app = express();
 
 // Verwendung von Partials (=Unter-Templates) enablen
@@ -68,6 +71,6 @@ app.get("/bad", (req, res) => {
 });
 
 // Port festlegen, auf den Application listened
-app.listen(3000, () => {
-  console.log("Server is up on Port 3000.");
+app.listen(port, () => {
+  console.log(`Server is up on Port ${port}.`);
 });
